@@ -1,0 +1,8 @@
+{{ if .Get "src" }}
+<div style="text-align: center;">
+  <img src="{{ .Get "src" | safeURL }}" {{ with .Get "alt" }}alt="{{ . | plainify }}"{{ end }} {{ with .Get "style" }}style="{{ . | safeCSS }}; margin-bottom: -10px;"{{ end }} {{ with .Get "rescale" }}style="transform: scale({{ . }}); margin-bottom: -10px;"{{ end }}>
+  {{ with .Get "caption" }}
+  <div style="margin-top: -10px; color: {{ with $.Get "captionColor" }}{{ . }}{{ else }}grey{{ end }}; font-size: {{ with $.Get "captionScale" }}{{ float . | mul 100 }}%{{ else }}100%{{ end }};">{{ . | plainify }}</div>
+  {{ end }}
+</div>
+{{ end }}
