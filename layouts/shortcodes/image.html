@@ -1,53 +1,44 @@
 {{ if .Get "src" }}
-<figure style="display: flex; align-items: center; {{ with .Get "position"}}float: {{ . }};{{ end }}">
+<figure style="position: relative; 
+              display: flex; 
+              flex-direction: column; 
+              align-items: {{ with .Get "position"}}{{ if eq . "left" }}flex-start{{ else if eq . "right" }}flex-end{{ else }}center{{ end }}{{ else }}center{{ end }};">
 
-    {{ $sideText := .Get "sideText" }}
-    {{ $sideTextPosition := or (.Get "sideTextPosition") "left" }}
-    {{ $sideTextAlignment := or (.Get "sideTextAlignment") "center" }}
+    {{ $caption := .Get "caption" }}
+    {{ $captionColor := or (.Get "captionColor") "gray" }}
+    {{ $captionPosition := or (.Get "captionPosition") "bottom" }}
+    {{ $captionAlignment := or (.Get "captionAlignment") "center" }}
+    {{ $rescale := or (.Get "rescale") "100%" }}
+    {{ $glowColor := or (.Get "glowColor") "#FFFFFF" }}
+    {{ $glowRadius := or (.Get "glowRadius") "5px" }}
+    {{ $glowDirection := or (.Get "glowDirection") "0 0" }}
+    {{ $alt := or (.Get "alt") "Image description" }}
 
-    {{ $alignSelf := "" }}
-    {{ $textAlign := "left" }}
-
-    {{ if or (eq $sideTextAlignment "top") (eq $sideTextAlignment "top-left") }}{{ $alignSelf = "flex-start" }}{{ end }}
-    {{ if or (eq $sideTextAlignment "bottom") (eq $sideTextAlignment "bottom-left") }}{{ $alignSelf = "flex-end" }}{{ end }}
-
-    {{ if or (eq $sideTextAlignment "center-right") (eq $sideTextAlignment "top-right") (eq $sideTextAlignment "bottom-right") }}{{ $textAlign = "right" }}{{ end }}
-    {{ if or (eq $sideTextAlignment "center") (eq $sideTextAlignment "top-center") (eq $sideTextAlignment "bottom-center") }}{{ $textAlign = "center" }}{{ end }}
-
-    {{ if and ($sideText) (eq $sideTextPosition "left") }}
-        <div class="side-text" style="align-self: {{ $alignSelf }}; text-align: {{ $textAlign }}; margin-right: 10px;">{{ $sideText }}</div>
+    {{ if and ($caption) (eq $captionPosition "top") }}
+        <figcaption style="background: none; 
+                           border: none; 
+                           color: {{ $captionColor | safeCSS }}; 
+                           text-align: {{ $captionAlignment }}; 
+                           max-width: {{ $rescale }};">
+            {{ $caption }}
+        </figcaption>
     {{ end }}
 
+    <img src="{{ .Get "src" | safeURL }}" 
+         alt="{{ $alt | plainify }}" 
+         style="width: {{ $rescale }};
+                height: auto;
+                box-shadow: {{ $glowDirection }} {{ $glowRadius }} {{ $glowColor }};" />
 
-    <div class="image-container" style="position: relative; display: flex; flex-direction: column; align-items: center;">
-        {{ $caption := .Get "caption" }}
-        {{ $captionColor := .Get "captionColor" }}
-        {{ $captionPosition := .Get "captionPosition" }}
-        {{ if not $captionPosition }}{{ $captionPosition = "bottom" }}{{ end }}
-        {{ $captionAlignment := .Get "captionAlignment" }}
-        {{ if not $captionAlignment }}{{ $captionAlignment = "center" }}{{ end }}
-        {{ $rescale := .Get "rescale" }}
-        {{ if not $rescale }}{{ $rescale = "70%" }}{{ end }}
-        {{ $glowColor := or (.Get "glowColor") "#FFFFFF" }}
-        {{ $glowRadius := or (.Get "glowRadius") "5px" }}
-        {{ $glowDirection := or (.Get "glowDirection") "0 0" }}
-
-        {{ if and ($caption) (eq $captionPosition "top") }}
-            <figcaption style="background: none; border: none; color: {{ if $captionColor }}{{ $captionColor | safeCSS }}{{ else }}gray{{ end }}; text-align: {{ $captionAlignment }}; max-width: {{ $rescale }};">{{ $caption }}</figcaption>
-        {{ end }}
-
-        <img src="{{ .Get "src" | safeURL }}" 
-             {{ with .Get "alt" }}alt="{{ . | plainify }}"{{ end }} 
-             style="{{ with .Get "style" }}{{ . }};{{ end }} width: {{ $rescale }}; height:auto; box-shadow: {{ $glowDirection }} {{ $glowRadius }} {{ $glowColor }};" />
-
-        {{ if and ($caption) (eq $captionPosition "bottom") }}
-            <figcaption style="background: none; border: none; color: {{ if $captionColor }}{{ $captionColor | safeCSS }}{{ else }}gray{{ end }}; text-align: {{ $captionAlignment }}; max-width: {{ $rescale }};">{{ $caption }}</figcaption>
-        {{ end }}
-    </div>
-
-    {{ if and ($sideText) (eq $sideTextPosition "right") }}
-    <div class="side-text" style="align-self: {{ $alignSelf }}; text-align: {{ $textAlign }}; margin-left: 10px;">{{ $sideText }}</div>
-{{ end }}
+    {{ if and ($caption) (eq $captionPosition "bottom") }}
+        <figcaption style="background: none; 
+                           border: none; 
+                           color: {{ $captionColor | safeCSS }}; 
+                           text-align: {{ $captionAlignment }}; 
+                           max-width: {{ $rescale }};">
+            {{ $caption }}
+        </figcaption>
+    {{ end }}
 
 </figure>
 {{ end }}
