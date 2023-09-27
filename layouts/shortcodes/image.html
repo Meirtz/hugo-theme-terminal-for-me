@@ -1,8 +1,44 @@
 {{ if .Get "src" }}
-<div style="text-align: center;">
-  <img src="{{ .Get "src" | safeURL }}" {{ with .Get "alt" }}alt="{{ . | plainify }}"{{ end }} {{ with .Get "style" }}style="{{ . | safeCSS }}; margin-bottom: -10px;"{{ end }} {{ with .Get "rescale" }}style="transform: scale({{ . }}); margin-bottom: -10px;"{{ end }}>
-  {{ with .Get "caption" }}
-  <div style="margin-top: -10px; color: {{ with $.Get "captionColor" }}{{ . }}{{ else }}grey{{ end }}; font-size: {{ with $.Get "captionScale" }}{{ float . | mul 100 }}%{{ else }}100%{{ end }};">{{ . | plainify }}</div>
-  {{ end }}
-</div>
+<figure style="position: relative; 
+              display: flex; 
+              flex-direction: column; 
+              align-items: {{ with .Get "position"}}{{ if eq . "left" }}flex-start{{ else if eq . "right" }}flex-end{{ else }}center{{ end }}{{ else }}center{{ end }};">
+
+    {{ $caption := .Get "caption" }}
+    {{ $captionColor := or (.Get "captionColor") "gray" }}
+    {{ $captionPosition := or (.Get "captionPosition") "bottom" }}
+    {{ $captionAlignment := or (.Get "captionAlignment") "center" }}
+    {{ $rescale := or (.Get "rescale") "100%" }}
+    {{ $glowColor := or (.Get "glowColor") "#FFFFFF" }}
+    {{ $glowRadius := or (.Get "glowRadius") "5px" }}
+    {{ $glowDirection := or (.Get "glowDirection") "0 0" }}
+    {{ $alt := or (.Get "alt") "Image description" }}
+
+    {{ if and ($caption) (eq $captionPosition "top") }}
+        <figcaption style="background: none; 
+                           border: none; 
+                           color: {{ $captionColor | safeCSS }}; 
+                           text-align: {{ $captionAlignment }}; 
+                           max-width: {{ $rescale }};">
+            {{ $caption }}
+        </figcaption>
+    {{ end }}
+
+    <img src="{{ .Get "src" | safeURL }}" 
+         alt="{{ $alt | plainify }}" 
+         style="width: {{ $rescale }};
+                height: auto;
+                box-shadow: {{ $glowDirection }} {{ $glowRadius }} {{ $glowColor }};" />
+
+    {{ if and ($caption) (eq $captionPosition "bottom") }}
+        <figcaption style="background: none; 
+                           border: none; 
+                           color: {{ $captionColor | safeCSS }}; 
+                           text-align: {{ $captionAlignment }}; 
+                           max-width: {{ $rescale }};">
+            {{ $caption }}
+        </figcaption>
+    {{ end }}
+
+</figure>
 {{ end }}
