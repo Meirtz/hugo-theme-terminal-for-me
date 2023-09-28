@@ -17,7 +17,13 @@
                   display: flex; 
                   flex-direction: column; 
                   flex-shrink: 0;
-                  align-items: center;">
+                  align-items: {{ with .Get "position" }}
+                           {{ if eq . "left" }}flex-start
+                           {{ else if eq . "right" }}flex-end
+                           {{ else }}center
+                           {{ end }}
+                           {{ else }}center
+                           {{ end }};">
     {{ end }}
 
 
