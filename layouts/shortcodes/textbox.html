@@ -1,0 +1,8 @@
+{{ $text := .Get "text" | default "" }}
+{{ $color := .Get "color" | default "black" }}
+{{ $fontsize := .Get "fontsize" | default "1em" }}
+{{ $fontfamily := .Get "fontfamily" | default "inherit" }}
+
+<div style="flex-shrink: 0; padding: 0.5em; color: {{ $color }}; font-size: {{ $fontsize }}; font-family: {{ $fontfamily }};">
+    {{ $text | safeHTML }}
+</div>

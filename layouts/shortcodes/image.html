@@ -1,46 +1,48 @@
 {{ if .Get "src" }}
-<figure style="position: relative; 
-              display: flex; 
-              flex-direction: column; 
-              flex-shrink: 0;
-              align-items: {{ with .Get "position"}}{{ if eq . "left" }}flex-start{{ else if eq . "right" }}flex-end{{ else }}center{{ end }}{{ else }}center{{ end }};width: auto;">
 
     {{ $caption := .Get "caption" }}
-    {{ $captionColor := or (.Get "captionColor") "gray" }}
-    {{ $captionPosition := or (.Get "captionPosition") "bottom" }}
-    {{ $captionAlignment := or (.Get "captionAlignment") "center" }}
     {{ $rescale := or (.Get "rescale") "100%" }}
-    {{ $glowColor := or (.Get "glowColor") "#FFFFFF" }}
-    {{ $glowRadius := or (.Get "glowRadius") "5px" }}
-    {{ $glowDirection := or (.Get "glowDirection") "0 0" }}
-    {{ $alt := or (.Get "alt") "Image description" }}
 
-    {{ if and ($caption) (eq $captionPosition "top") }}
-        <figcaption style="background: none; 
-                           border: none; 
-                           color: {{ $captionColor | safeCSS }}; 
-                           text-align: {{ $captionAlignment }}; 
-                           max-width: {{ $rescale }};">
-            {{ $caption }}
-        </figcaption>
-    {{ end }}
+    <figure style="position: relative; 
+                  display: flex; 
+                  flex-direction: column; 
+                  flex-shrink: 0;
+                  align-items: {{ with .Get "position"}}{{ if eq . "left" }}flex-start{{ else if eq . "right" }}flex-end{{ else }}center{{ end }}{{ else }}center{{ end }};
+                  width: {{ $rescale }};">
 
-    <img src="{{ .Get "src" | safeURL }}" 
-         alt="{{ $alt | plainify }}" 
-         style="width: {{ $rescale }};
-                height: auto;
-                max-width: none;
-                box-shadow: {{ $glowDirection }} {{ $glowRadius }} {{ $glowColor }};" />
+        {{ $captionColor := or (.Get "captionColor") "gray" }}
+        {{ $captionPosition := or (.Get "captionPosition") "bottom" }}
+        {{ $captionAlignment := or (.Get "captionAlignment") "center" }}
+        {{ $glowColor := or (.Get "glowColor") "#FFFFFF" }}
+        {{ $glowRadius := or (.Get "glowRadius") "5px" }}
+        {{ $glowDirection := or (.Get "glowDirection") "0 0" }}
+        {{ $alt := or (.Get "alt") "Image description" }}
 
-    {{ if and ($caption) (eq $captionPosition "bottom") }}
-        <figcaption style="background: none; 
-                           border: none; 
-                           color: {{ $captionColor | safeCSS }}; 
-                           text-align: {{ $captionAlignment }}; 
-                           max-width: {{ $rescale }};">
-            {{ $caption }}
-        </figcaption>
-    {{ end }}
+        {{ if and ($caption) (eq $captionPosition "top") }}
+            <figcaption style="background: none; 
+                               border: none; 
+                               color: {{ $captionColor | safeCSS }}; 
+                               text-align: {{ $captionAlignment }}; 
+                               max-width: 100%;">
+                {{ $caption | safeHTML }}
+            </figcaption>
+        {{ end }}
 
-</figure>
+        <img src="{{ .Get "src" | safeURL }}" 
+             alt="{{ $alt | plainify }}" 
+             style="width: 100%;
+                    height: auto;
+                    box-shadow: {{ $glowDirection }} {{ $glowRadius }} {{ $glowColor }};" />
+
+        {{ if and ($caption) (eq $captionPosition "bottom") }}
+            <figcaption style="background: none; 
+                               border: none; 
+                               color: {{ $captionColor | safeCSS }}; 
+                               text-align: {{ $captionAlignment }}; 
+                               max-width: 100%;">
+                {{ $caption }}
+            </figcaption>
+        {{ end }}
+
+    </figure>
 {{ end }}
