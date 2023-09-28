@@ -2,7 +2,8 @@
 <figure style="position: relative; 
               display: flex; 
               flex-direction: column; 
-              align-items: {{ with .Get "position"}}{{ if eq . "left" }}flex-start{{ else if eq . "right" }}flex-end{{ else }}center{{ end }}{{ else }}center{{ end }};">
+              flex-shrink: 0;
+              align-items: {{ with .Get "position"}}{{ if eq . "left" }}flex-start{{ else if eq . "right" }}flex-end{{ else }}center{{ end }}{{ else }}center{{ end }};width: auto;">
 
     {{ $caption := .Get "caption" }}
     {{ $captionColor := or (.Get "captionColor") "gray" }}
@@ -28,6 +29,7 @@
          alt="{{ $alt | plainify }}" 
          style="width: {{ $rescale }};
                 height: auto;
+                max-width: none;
                 box-shadow: {{ $glowDirection }} {{ $glowRadius }} {{ $glowColor }};" />
 
     {{ if and ($caption) (eq $captionPosition "bottom") }}
