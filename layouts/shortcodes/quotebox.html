@@ -1,0 +1,6 @@
+<div style="background-color: transparent; padding: 20px; border-left: 4px solid #007BFF; position: relative; margin: 1.5em 0;">
+    <p style="margin: 0; font-size: 0.9em; color: gray;">{{ .Get "text" }}</p>
+    {{ if .Get "author" }}
+    <span style="display: block; text-align: right; font-size: 0.8em; margin-top: 0.5em; color: gray;">——— {{ .Get "author" }}</span>
+    {{ end }}
+</div>
