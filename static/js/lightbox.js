@@ -2,8 +2,12 @@ document.addEventListener("DOMContentLoaded", function() {
     let lightboxActive = false;
 
     function preventScroll(event) {
-        event.preventDefault();
+        // 如果只有一个触摸点（即一个手指），则阻止滚动
+        if (event.touches.length === 1) {
+            event.preventDefault();
+        }
     }
+    
 
     document.body.addEventListener("click", function(event) {
         // Check if we clicked on an image to open the lightbox
