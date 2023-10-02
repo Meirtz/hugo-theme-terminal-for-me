@@ -6,6 +6,7 @@
   {{ end }}
   {{ partial "head.html" . }}
   {{ partial "clarity.html" . }}
+  <link rel="stylesheet" href="/css/lightbox.css">
 </head>
 <body class="{{- ( or .Params.color $.Site.Params.ThemeColor ) -}}">
 {{ $container := cond ($.Site.Params.FullWidthTheme | default false) "container full" (cond ($.Site.Params.CenterTheme | default false) "container center" "container") }}
@@ -23,6 +24,7 @@
     {{ partial "footer.html" . }}
   {{ end }}
 </div>
+<script src="/js/lightbox.js"></script>
 
 </body>
 </html>

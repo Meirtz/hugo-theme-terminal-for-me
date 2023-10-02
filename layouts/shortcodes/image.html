@@ -1,64 +1,81 @@
 <!-- image.html -->
 
 {{ if .Get "src" }}
+    <!-- Initial variable definitions -->
+    {{ $src := .Get "src" }}
     {{ $caption := .Get "caption" }}
-    {{ $rescale := or (.Get "rescale") "100%" }}
+    {{ $rescale := .Get "rescale" }}
     {{ $insideContainer := .Get "insideContainer" }}
 
-    {{ if $insideContainer }}
-        <figure style="position: relative; 
-                  display: flex; 
-                  flex-direction: column; 
-                  flex-shrink: 0;
-                  align-items: center; 
-                  width: {{ $rescale }};">
-    {{ else }}
-        <figure style="position: relative; 
-                  display: flex; 
-                  flex-direction: column; 
-                  flex-shrink: 0;
-                  align-items: {{ with .Get "position" }}
-                           {{ if eq . "left" }}flex-start
-                           {{ else if eq . "right" }}flex-end
-                           {{ else }}center
-                           {{ end }}
-                           {{ else }}center
-                           {{ end }};">
+    <!-- Parameter validation for rescale -->
+    {{ if not (findRE "^\\d+(\\.\\d+)?%$" $rescale) }}
+        {{ errorf "Invalid rescale value provided: %s" $rescale }}
     {{ end }}
 
+    <!-- Set default values directly -->
+    {{ $captionColor := "gray" }}
+    {{ with .Get "captionColor" }} {{ $captionColor = . }} {{ end }}
 
-    {{ $caption := .Get "caption" }}
-    {{ $captionColor := or (.Get "captionColor") "gray" }}
-    {{ $captionPosition := or (.Get "captionPosition") "bottom" }}
-    {{ $captionAlignment := or (.Get "captionAlignment") "center" }}
-    {{ $rescale := or (.Get "rescale") "100%" }}
-    {{ $glowColor := or (.Get "glowColor") "#FFFFFF" }}
-    {{ $glowRadius := or (.Get "glowRadius") "5px" }}
-    {{ $glowDirection := or (.Get "glowDirection") "0 0" }}
-    {{ $alt := or (.Get "alt") "Image description" }}
+    {{ $captionPosition := "bottom" }}
+    {{ with .Get "captionPosition" }} {{ $captionPosition = . }} {{ end }}
 
-    {{ if and ($caption) (eq $captionPosition "top") }}
+    {{ $captionAlignment := "center" }}
+    {{ with .Get "captionAlignment" }} {{ $captionAlignment = . }} {{ end }}
+
+    {{ $glowColor := "#FFFFFF" }}
+    {{ with .Get "glowColor" }} {{ $glowColor = . }} {{ end }}
+
+    {{ $glowRadius := "5px" }}
+    {{ with .Get "glowRadius" }} {{ $glowRadius = . }} {{ end }}
+
+    {{ $glowDirection := "0 0" }}
+    {{ with .Get "glowDirection" }} {{ $glowDirection = . }} {{ end }}
+
+    {{ $alt := "Image description" }}
+    {{ with .Get "alt" }} {{ $alt = . }} {{ end }}
+
+    <!-- Format <figure> tag based on parameters -->
+    {{ $alignItems := "center" }} <!-- Default value -->
+
+    {{ if eq (.Get "position") "left" }}
+        {{ $alignItems = "flex-start" }}
+    {{ else if eq (.Get "position") "right" }}
+        {{ $alignItems = "flex-end" }}
+    {{ end }}
+    
+    <figure style="position: relative; 
+                  display: flex; 
+                  flex-direction: column; 
+                  flex-shrink: 0;
+                  align-items: {{ if $insideContainer }}center{{ else }}{{ $alignItems }}{{ end }}; 
+                  width: {{ $rescale }};">
+    
+
+    <!-- Caption (Top) -->
+    {{ if and $caption (eq $captionPosition "top") }}
         <figcaption style="background: none; 
                            border: none; 
-                           color: {{ $captionColor | safeCSS }}; 
+                           color: {{ $captionColor }}; 
                            text-align: {{ $captionAlignment }}; 
                            max-width: {{ $rescale }};">
-            {{ $caption | safeHTML }}
-
+            {{ $caption }}
         </figcaption>
     {{ end }}
 
-    <img src="{{ .Get "src" | safeURL }}" 
-         alt="{{ $alt | plainify }}" 
-         style="width: {{ $rescale }};
-                height: auto;
-                max-width: none;
-                box-shadow: {{ $glowDirection }} {{ $glowRadius }} {{ $glowColor }};" />
+    <!-- Image Element -->
+    <img src="{{ $src }}" 
+    alt="{{ $alt }}" 
+    class="lightbox-enabled" 
+    style="width: {{ $rescale }};
+           height: auto;
+           max-width: none;
+           box-shadow: {{ $glowDirection }} {{ $glowRadius }} {{ $glowColor }};" />
 
-    {{ if and ($caption) (eq $captionPosition "bottom") }}
+    <!-- Caption (Bottom) -->
+    {{ if and $caption (eq $captionPosition "bottom") }}
         <figcaption style="background: none; 
                            border: none; 
-                           color: {{ $captionColor | safeCSS }}; 
+                           color: {{ $captionColor }}; 
                            text-align: {{ $captionAlignment }}; 
                            max-width: {{ $rescale }};">
             {{ $caption }}
