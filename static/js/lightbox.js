@@ -1,6 +1,10 @@
 document.addEventListener("DOMContentLoaded", function() {
     let lightboxActive = false;
 
+    function preventScroll(event) {
+        event.preventDefault();
+    }
+
     document.body.addEventListener("click", function(event) {
         // Check if we clicked on an image to open the lightbox
         if (event.target.classList.contains("lightbox-enabled") && !lightboxActive) {
@@ -19,6 +23,9 @@ document.addEventListener("DOMContentLoaded", function() {
             // Append lightbox to body and activate blur
             document.body.appendChild(lightbox);
             document.body.classList.add("lightbox-active");
+
+            // Prevent scrolling on iOS devices
+            document.body.addEventListener("touchmove", preventScroll, { passive: false });
             
             lightboxActive = true;
 
@@ -28,6 +35,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 document.body.removeChild(lightbox);
             }
             document.body.classList.remove("lightbox-active");
+
+            // Allow scrolling on iOS devices
+            document.body.removeEventListener("touchmove", preventScroll);
+            
             lightboxActive = false;
         }
     });
