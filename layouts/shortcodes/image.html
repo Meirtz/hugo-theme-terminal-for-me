@@ -58,7 +58,7 @@
                            color: {{ $captionColor }}; 
                            text-align: {{ $captionAlignment }}; 
                            max-width: {{ $rescale }};">
-            {{ $caption }}
+            {{ $caption | safeHTML }}
         </figcaption>
     {{ end }}
 
@@ -78,7 +78,7 @@
                            color: {{ $captionColor }}; 
                            text-align: {{ $captionAlignment }}; 
                            max-width: {{ $rescale }};">
-            {{ $caption }}
+            {{ $caption | safeHTML }}
         </figcaption>
     {{ end }}
 
